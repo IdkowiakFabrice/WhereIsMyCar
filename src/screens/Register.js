@@ -1,33 +1,87 @@
-import React from 'react'
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'
-import { TextInput } from 'react-native-gesture-handler'
+import React, { Component } from 'react'
+import { StyleSheet, View, Text, TouchableOpacity, TextInput } from 'react-native'
+import * as axios from 'axios'
 
-
-function Register(props) {
-    const { navigation } = props
+class Register extends Component{
+    constructor(props) {
+        super(props);
+        this.state = {
+            username: '',
+            password: '',
+            firstname:'',
+            lastname:'',
+            passwordConfirmation:''
+        };
+      }
+    
+    _signin = () => {
+        const link = 'https://whereismycar.herokuapp.com/api/authenticate/signin';
+        const newUser = {
+            "username": this.state.username,
+            "password": this.state.password,
+            "passwordConfirmation": this.state.passwordConfirmation,
+            "firstname": this.state.firstname,
+            "lastname": this.state.lastname
+          };
+        let axiosConfig = {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        };
+        axios.post(link, newUser, axiosConfig)
+        .then((response) => {
+            this.props.navigation.navigate('Map')
+            console.log(JSON.stringify(response))
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+    }
+    
+    render(){
     return (
         <View style={styles.container}>
             <Text style={styles.text}>Register</Text>
             <TextInput
-                placeholder="Username"
-                style={{ borderBottomColor: 'Grey', borderBottomWidth: 1, paddingHorizontal: 60 }}>
+                placeholder="Nom"
+                style={{ borderBottomColor: 'grey', borderBottomWidth: 1, paddingHorizontal: 60 }}
+                onChangeText={(lastname) => {this.setState({lastname})}}
+                value={this.state.lastname}>
             </TextInput>
             <TextInput
-                placeholder="Enter password"
-                style={{ borderBottomColor: 'Grey', borderBottomWidth: 1, paddingHorizontal: 40 }}>
+                placeholder="Prenom"
+                style={{ borderBottomColor: 'grey', borderBottomWidth: 1, paddingHorizontal: 40 }}
+                onChangeText={(firstname) => {this.setState({firstname})}}
+                value={this.state.firstname}>
             </TextInput>
+            <TextInput
+                placeholder="Nom d'utilisateur"
+                style={{ borderBottomColor: 'grey', borderBottomWidth: 1, paddingHorizontal: 40 }}
+                onChangeText={(username) => {this.setState({username})}}
+                value={this.state.username}>
+            </TextInput>
+            <TextInput
+                placeholder="Mot de passe"
+                style={{ borderBottomColor: 'grey', borderBottomWidth: 1, paddingHorizontal: 40 }}
+                onChangeText={(password) => {this.setState({password})}}
+                value={this.state.password}>
+            </TextInput>
+            <TextInput
+                placeholder="Confirmation du mot de passe"
+                style={{ borderBottomColor: 'grey', borderBottomWidth: 1, paddingHorizontal: 40 }}
+                onChangeText={(passwordConfirmation) => {this.setState({passwordConfirmation})}}
+                value={this.state.passwordConfirmation}>
+            </TextInput>
+            
             <TouchableOpacity
                 style={styles.buttonContainer}
-                onPress={() => navigation.navigate('Map')}>
-                <Text style={styles.buttonTextLogin}>Login</Text>
-            </TouchableOpacity>
-            <Text>Dont have an account ? Click here: </Text>
-            <TouchableOpacity
-                onPress={() => navigation.navigate('Map')}>
-                <Text style={styles.SignUpText}>Sign Up</Text>
+                onPress={this._signin}
+                >
+                <Text style={styles.buttonTextLogin}>Register</Text>
             </TouchableOpacity>
         </View>
     )
+}
 }
 
 const styles = StyleSheet.create({

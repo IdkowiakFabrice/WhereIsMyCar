@@ -1,42 +1,44 @@
-import React from 'react'
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'
-import { TextInput } from 'react-native-gesture-handler'
+import React, {Component} from 'react'
+import { StyleSheet, View, Text, TouchableOpacity, TextInput } from 'react-native'
 
 
-function Login(props) {
-    const { navigation } = props
-    state = {
-        username: '',
-        password: ''
-    }
+class Login extends Component{
+    constructor(props) {
+        super(props);
+        this.state = {
+            username: '',
+            password: '',
+        };
+      }
+    render(){
     return (
         <View style={styles.container}>
             <Text style={styles.text}>Login</Text>
             <TextInput
                 placeholder="Username"
-                style= {styles.TextInputUsername}
+                style= {styles.textInputUsername}
                 onChangeText={username => this.setState({username})}
                 value={this.state.username}>
             </TextInput>
             <TextInput
                 placeholder="Enter password"
-                style = {styles.TextInputPassword}
-                style={{ borderBottomColor: 'Grey', borderBottomWidth: 1, paddingHorizontal: 40 }}
+                style = {styles.textInputPassword}
                 onChangeText={password => this.setState({password})}
                 value={this.state.password}>
             </TextInput>
             <TouchableOpacity
                 style={styles.buttonContainer}
-                onPress={() => navigation.navigate('Map')}>
+                onPress={() => this.props.navigation.navigate('Map')}>
                 <Text style={styles.buttonTextLogin}>Login</Text>
             </TouchableOpacity>
             <Text>Dont have an account ? Click here: </Text>
             <TouchableOpacity
-                onPress={() => navigation.navigate('Register')}>
-                <Text style={styles.SignUpText}>Sign Up</Text>
+                onPress={() => this.props.navigation.navigate('Register')}>
+                <Text style={styles.signUpText}>Sign Up</Text>
             </TouchableOpacity>
         </View>
     )
+}
 }
 
 const styles = StyleSheet.create({
@@ -46,21 +48,23 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#ebebeb',
     },
-    TextInputUsername: {
+    textInputUsername: {
         borderBottomColor: 'grey', 
         borderBottomWidth: 1, 
-        paddingHorizontal: 60
-
+        paddingHorizontal: 60,
+        marginBottom: 40,
     },
-    TextInputPassword: {
+    textInputPassword: {
         borderBottomColor: 'grey', 
         borderBottomWidth: 1, 
-        paddingHorizontal: 60
+        paddingHorizontal: 40
     },
     text: {
         color: '#101010',
         fontSize: 24,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        marginTop: -200,
+        marginBottom: 100,
     },
     buttonContainer: {
         backgroundColor: '#222',
@@ -70,9 +74,10 @@ const styles = StyleSheet.create({
     },
     buttonTextLogin: {
         fontSize: 20,
-        color: 'orange'
+        color: 'orange',
+        paddingHorizontal: 20,
     },
-    SignUpText: {
+    signUpText: {
         color: 'orange',
     }
 })
