@@ -65,12 +65,14 @@ class Register extends Component{
             <TextInput
                 placeholder="Mot de passe"
                 style={styles.input}
+                secureTextEntry={true}
                 onChangeText={(password) => {this.setState({password})}}
                 value={this.state.password}>
             </TextInput>
             <TextInput
                 placeholder="Confirmation du mot de passe"
                 style={styles.input}
+                secureTextEntry={true}
                 onChangeText={(passwordConfirmation) => {this.setState({passwordConfirmation})}}
                 value={this.state.passwordConfirmation}>
             </TextInput>
