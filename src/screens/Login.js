@@ -36,7 +36,7 @@ class Login extends Component{
         .then((response) => {
             this._storeData(response.data.data.meta.token, response.data.data.user.id.toString());
             this.props.navigation.navigate('Map')
-            console.log(JSON.stringify(response))
+           // console.log(JSON.stringify(response))
         })
         .catch((error) => {
             console.log(error);

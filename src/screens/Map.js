@@ -13,10 +13,10 @@ export default class App extends Component {
     latitude: 48.85709291743982,
     longitude: 2.401771566073614,
     error:null,
-    carMarker: 55.754717628176,
-    carMarker2: 37.60729983595983,
+    carMarkerLat: null,
+    carMarkerLong: null,
     isVisible: false,
-    positionCarDetails: null, 
+    positionCarComment: null, 
     token: '',
     idUser: '',
   };
@@ -25,8 +25,8 @@ export default class App extends Component {
     try {
         const token = await AsyncStorage.getItem('@token');
         const idUser = await AsyncStorage.getItem('@idUser');
-        console.log('token:%s', token)
-        console.log('userid:%s', idUser)
+        //console.log('token:%s', token)
+        //console.log('userid:%s', idUser)
         if (idUser !== null) {
           this.setState({ idUser })
         }
@@ -51,9 +51,11 @@ export default class App extends Component {
     axios.get("https://whereismycar.herokuapp.com/api/users/" + idUser + '/positions/'+ idUser, axiosConfig)
     .then((response) => {
       //console.log(response.data.data.position.longitude,response.data.data.position.latitude)
-      this.setState({carMarker:parseFloat(response.data.data.position.latitude) })
-      this.setState({carMarker2:parseFloat(response.data.data.position.longitude) })
-      console.log('carMarker: %s', this.state.carMarker)
+      this.setState({carMarkerLat:parseFloat(response.data.data.position.latitude) })
+      this.setState({carMarkerLong:parseFloat(response.data.data.position.longitude) })
+      this.setState({positionCarComment:response.data.data.position.commentaire })
+
+      //console.log('carMarker: %s', this.state.carMarker)
     })
     .catch((error) => {
         console.log(error);
@@ -113,10 +115,10 @@ export default class App extends Component {
           this.state.carMarker && 
           <MapsView.Marker 
           coordinate={{
-            latitude: this.state.carMarker,
-            longitude: this.state.carMarker2
+            latitude: this.state.carMarkerLat,
+            longitude: this.state.carMarkerLong
           }} 
-          title={this.state.positionCarDetails}></MapsView.Marker>
+          title={this.state.positionCarComment}></MapsView.Marker>
         }
         </MapsView>
           {this.state.isVisible ? popup : emptyPopup }  
