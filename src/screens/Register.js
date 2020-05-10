@@ -32,7 +32,7 @@ class Register extends Component{
         };
         axios.post(link, newUser, axiosConfig)
         .then((response) => {
-            this.props.navigation.navigate('Map')
+            this.props.navigation.navigate('RegisterSuccess')
             console.log(JSON.stringify(response))
         })
         .catch((error) => {
