@@ -2,14 +2,19 @@ import React, { Component } from 'react'
 import {StyleSheet, Text, View, AsyncStorage } from 'react-native'
 import MapsView, {Marker} from 'react-native-maps';
 import { TextInput } from 'react-native-gesture-handler';
+import * as axios from 'axios'
 
 export default class App extends Component {
+  static navigationOptions = {
+    headerMode: null
+}
   
   state = {
-    latitude: 48.83624674150805,
+    latitude: 48.85709291743982,
     longitude: 2.401771566073614,
     error:null,
-    carMarker: null,
+    carMarker: 55.754717628176,
+    carMarker2: 37.60729983595983,
     isVisible: false,
     positionCarDetails: null, 
     token: '',
@@ -23,21 +28,41 @@ export default class App extends Component {
         console.log('token:%s', token)
         console.log('userid:%s', idUser)
         if (idUser !== null) {
-          // console.log("Home : " + token);
           this.setState({ idUser })
         }
         if (token !== null) {
-            // console.log("Home : " + token);
             this.setState({ token })
         }
+        this._getMarker(idUser, token)
+
     } catch (error) {
         console.error(error);
     }
   };
 
+  _getMarker = (idUser, token) => {
+    console.log('iduSer:%s', idUser)
+    let axiosConfig = {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + this.state.token
+      }
+    };
+    axios.get("https://whereismycar.herokuapp.com/api/users/" + idUser + '/positions/'+ idUser, axiosConfig)
+    .then((response) => {
+      //console.log(response.data.data.position.longitude,response.data.data.position.latitude)
+      this.setState({carMarker:parseFloat(response.data.data.position.latitude) })
+      this.setState({carMarker2:parseFloat(response.data.data.position.longitude) })
+      console.log('carMarker: %s', this.state.carMarker)
+    })
+    .catch((error) => {
+        console.log(error);
+    });
+  }
+
    componentDidMount() {
     this._retrieveData();
-
+  
     navigator.geolocation.getCurrentPosition(
        (position) => {
          this.setState({
@@ -86,7 +111,12 @@ export default class App extends Component {
         />
         {
           this.state.carMarker && 
-          <MapsView.Marker coordinate={this.state.carMarker} title={this.state.positionCarDetails}></MapsView.Marker>
+          <MapsView.Marker 
+          coordinate={{
+            latitude: this.state.carMarker,
+            longitude: this.state.carMarker2
+          }} 
+          title={this.state.positionCarDetails}></MapsView.Marker>
         }
         </MapsView>
           {this.state.isVisible ? popup : emptyPopup }  

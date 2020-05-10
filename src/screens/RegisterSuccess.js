@@ -18,14 +18,10 @@ class RegisterSuccess extends Component{
         try {
             const token = await AsyncStorage.getItem('@token');
             const username = await AsyncStorage.getItem('@username');
-            console.log('token:%s', token)
-            console.log('username:%s', username)
             if (username !== null) {
-              // console.log("Home : " + token);
               this.setState({ username })
             }
             if (token !== null) {
-                // console.log("Home : " + token);
                 this.setState({ token })
             }
         } catch (error) {
