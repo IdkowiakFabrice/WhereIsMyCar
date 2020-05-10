@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, Text, TouchableOpacity, TextInput } from 'react-native'
+import { StyleSheet, View, Text, TouchableOpacity, TextInput, Dimensions } from 'react-native'
 import * as axios from 'axios'
 
+const{width: WIDTH} = Dimensions.get('window') 
 class Register extends Component{
     constructor(props) {
         super(props);
@@ -10,18 +11,19 @@ class Register extends Component{
             password: '',
             firstname:'',
             lastname:'',
-            passwordConfirmation:''
+            passwordConfirmation:'',
         };
       }
     
     _signin = () => {
-        const link = 'https://whereismycar.herokuapp.com/api/authenticate/signin';
+        const link = 'https://whereismycar.herokuapp.com/api/authenticate/signup';
         const newUser = {
+            "lastname": this.state.lastname,
             "username": this.state.username,
             "password": this.state.password,
             "passwordConfirmation": this.state.passwordConfirmation,
             "firstname": this.state.firstname,
-            "lastname": this.state.lastname
+
           };
         let axiosConfig = {
             headers: {
@@ -44,31 +46,31 @@ class Register extends Component{
             <Text style={styles.text}>Register</Text>
             <TextInput
                 placeholder="Nom"
-                style={{ borderBottomColor: 'grey', borderBottomWidth: 1, paddingHorizontal: 60 }}
+                style={styles.input}
                 onChangeText={(lastname) => {this.setState({lastname})}}
                 value={this.state.lastname}>
             </TextInput>
             <TextInput
                 placeholder="Prenom"
-                style={{ borderBottomColor: 'grey', borderBottomWidth: 1, paddingHorizontal: 40 }}
+                style={styles.input}
                 onChangeText={(firstname) => {this.setState({firstname})}}
                 value={this.state.firstname}>
             </TextInput>
             <TextInput
                 placeholder="Nom d'utilisateur"
-                style={{ borderBottomColor: 'grey', borderBottomWidth: 1, paddingHorizontal: 40 }}
+                style={styles.input}
                 onChangeText={(username) => {this.setState({username})}}
                 value={this.state.username}>
             </TextInput>
             <TextInput
                 placeholder="Mot de passe"
-                style={{ borderBottomColor: 'grey', borderBottomWidth: 1, paddingHorizontal: 40 }}
+                style={styles.input}
                 onChangeText={(password) => {this.setState({password})}}
                 value={this.state.password}>
             </TextInput>
             <TextInput
                 placeholder="Confirmation du mot de passe"
-                style={{ borderBottomColor: 'grey', borderBottomWidth: 1, paddingHorizontal: 40 }}
+                style={styles.input}
                 onChangeText={(passwordConfirmation) => {this.setState({passwordConfirmation})}}
                 value={this.state.passwordConfirmation}>
             </TextInput>
@@ -94,7 +96,8 @@ const styles = StyleSheet.create({
     text: {
         color: '#101010',
         fontSize: 24,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        marginBottom:30,
     },
     buttonContainer: {
         backgroundColor: '#222',
@@ -108,6 +111,17 @@ const styles = StyleSheet.create({
     },
     SignUpText: {
         color: 'orange',
+    },
+    input: {
+        width: WIDTH -55,
+        height: 45,
+        borderRadius: 25,
+        fontSize: 16,
+        paddingLeft: 45,
+        backgroundColor:'rgba(0,0,0,0.35)',
+        color:'rgba(255,255,255,0.7)',
+        marginHorizontal: 25,
+        marginBottom: 20,
     }
 })
 

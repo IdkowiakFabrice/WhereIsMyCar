@@ -1,6 +1,8 @@
 import React, {Component} from 'react'
-import { StyleSheet, View, Text, TouchableOpacity, TextInput } from 'react-native'
+import { StyleSheet, View, Text, TouchableOpacity, TextInput, Dimensions } from 'react-native'
+import * as axios from 'axios'
 
+const{width: WIDTH} = Dimensions.get('window') 
 
 class Login extends Component{
     constructor(props) {
@@ -10,31 +12,53 @@ class Login extends Component{
             password: '',
         };
       }
+      _login = () => {
+        const link = 'https://whereismycar.herokuapp.com/api/authenticate/signin';
+        const user = {
+            "username": this.state.username,
+            "password": this.state.password,
+          };
+        let axiosConfig = {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        };
+        axios.post(link, user, axiosConfig)
+        .then((response) => {
+            this.props.navigation.navigate('Map')
+            console.log(JSON.stringify(response))
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+      }
+
     render(){
     return (
         <View style={styles.container}>
             <Text style={styles.text}>Login</Text>
             <TextInput
-                placeholder="Username"
-                style= {styles.textInputUsername}
-                onChangeText={username => this.setState({username})}
+                placeholder="Nom d'utilisateur"
+                style={styles.input}
+                onChangeText={(username) => {this.setState({username})}}
                 value={this.state.username}>
             </TextInput>
             <TextInput
-                placeholder="Enter password"
-                style = {styles.textInputPassword}
-                onChangeText={password => this.setState({password})}
+                placeholder="Mot de passe"
+                style = {styles.input}
+                onChangeText={(password) => {this.setState({password})}}
                 value={this.state.password}>
             </TextInput>
             <TouchableOpacity
                 style={styles.buttonContainer}
-                onPress={() => this.props.navigation.navigate('Map')}>
-                <Text style={styles.buttonTextLogin}>Login</Text>
+                onPress={this._login}
+                >
+                <Text style={styles.buttonTextLogin}>Connexion</Text>
             </TouchableOpacity>
-            <Text>Dont have an account ? Click here: </Text>
+            <Text>Vous n'avez pas de compte ? Cliquez ici: </Text>
             <TouchableOpacity
                 onPress={() => this.props.navigation.navigate('Register')}>
-                <Text style={styles.signUpText}>Sign Up</Text>
+                <Text style={styles.signUpText}>S'inscrire</Text>
             </TouchableOpacity>
         </View>
     )
@@ -47,24 +71,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#ebebeb',
-    },
-    textInputUsername: {
-        borderBottomColor: 'grey', 
-        borderBottomWidth: 1, 
-        paddingHorizontal: 60,
-        marginBottom: 40,
-    },
-    textInputPassword: {
-        borderBottomColor: 'grey', 
-        borderBottomWidth: 1, 
-        paddingHorizontal: 40
-    },
+    },    
     text: {
         color: '#101010',
         fontSize: 24,
         fontWeight: 'bold',
-        marginTop: -200,
-        marginBottom: 100,
+        marginBottom: 30,
     },
     buttonContainer: {
         backgroundColor: '#222',
@@ -79,6 +91,17 @@ const styles = StyleSheet.create({
     },
     signUpText: {
         color: 'orange',
+    },
+    input: {
+        width: WIDTH -55,
+        height: 45,
+        borderRadius: 25,
+        fontSize: 16,
+        paddingLeft: 45,
+        backgroundColor:'rgba(0,0,0,0.35)',
+        color:'rgba(255,255,255,0.7)',
+        marginHorizontal: 25,
+        marginBottom: 20,
     }
 })
 

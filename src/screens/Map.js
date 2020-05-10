@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import {StyleSheet, Text, View, Modal } from 'react-native'
 import MapsView, {Marker} from 'react-native-maps';
-import MapView from 'react-native-maps';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 
 export default class App extends Component {
