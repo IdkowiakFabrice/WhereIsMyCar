@@ -1,15 +1,47 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, Text, TouchableOpacity, TextInput, Dimensions } from 'react-native'
+import { StyleSheet, View, Text, TouchableOpacity, TextInput, Dimensions, AsyncStorage  } from 'react-native'
 import * as axios from 'axios'
-import { render } from 'react-dom'
 
 const{width: WIDTH} = Dimensions.get('window')
 class RegisterSuccess extends Component{
+    constructor(props) {
+        super(props);
+        this.state = {
+          username: '',
+          token: '',
+          userId: 0
+        };
+      }
+
+
+    _retrieveData = async () => {
+        try {
+            const token = await AsyncStorage.getItem('@token');
+            const username = await AsyncStorage.getItem('@username');
+            console.log('token:%s', token)
+            console.log('username:%s', username)
+            if (username !== null) {
+              // console.log("Home : " + token);
+              this.setState({ username })
+            }
+            if (token !== null) {
+                // console.log("Home : " + token);
+                this.setState({ token })
+            }
+        } catch (error) {
+            console.error(error);
+        }
+      };
+
+      componentDidMount = () => {
+        this._retrieveData();
+      }
 
     render() {
         return(
             <View style = {styles.container}>
                 <Text style = {styles.text}>Inscription réussie!</Text>
+                <Text>Bienvenue: { this.state.username }</Text>
                 <TouchableOpacity
                 onPress={() => this.props.navigation.navigate('Login')}>
                 <Text style={styles.signUpText}>Retour</Text>

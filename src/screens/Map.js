@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import {StyleSheet, Text, View, Modal } from 'react-native'
+import {StyleSheet, Text, View, AsyncStorage } from 'react-native'
 import MapsView, {Marker} from 'react-native-maps';
-import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
+import { TextInput } from 'react-native-gesture-handler';
 
 export default class App extends Component {
   
@@ -12,9 +12,32 @@ export default class App extends Component {
     carMarker: null,
     isVisible: false,
     positionCarDetails: null, 
+    token: '',
+    idUser: '',
+  };
+
+  _retrieveData = async () => {
+    try {
+        const token = await AsyncStorage.getItem('@token');
+        const idUser = await AsyncStorage.getItem('@idUser');
+        console.log('token:%s', token)
+        console.log('userid:%s', idUser)
+        if (idUser !== null) {
+          // console.log("Home : " + token);
+          this.setState({ idUser })
+        }
+        if (token !== null) {
+            // console.log("Home : " + token);
+            this.setState({ token })
+        }
+    } catch (error) {
+        console.error(error);
+    }
   };
 
    componentDidMount() {
+    this._retrieveData();
+
     navigator.geolocation.getCurrentPosition(
        (position) => {
          this.setState({
@@ -26,6 +49,7 @@ export default class App extends Component {
        (error) => this.setState({ error: error.message }),
        { enableHighAccuracy: false, timeout: 200000, maximumAge: 1000 },
      );
+
    }
   
   render() {

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, Text, TouchableOpacity, TextInput, Dimensions } from 'react-native'
+import { StyleSheet, View, Text, TouchableOpacity, TextInput, Dimensions, AsyncStorage  } from 'react-native'
 import * as axios from 'axios'
 
 const{width: WIDTH} = Dimensions.get('window') 
@@ -13,6 +13,14 @@ class Register extends Component{
             lastname:'',
             passwordConfirmation:'',
         };
+      }
+
+      _storeData = (token, username) => {
+        try {
+          AsyncStorage.multiSet([['@token', token], ['@username', username]])
+        } catch (error) {
+         console.error(error);
+        }
       }
     
     _signin = () => {
@@ -32,6 +40,7 @@ class Register extends Component{
         };
         axios.post(link, newUser, axiosConfig)
         .then((response) => {
+            this._storeData(response.data.data.meta.token, response.data.data.user.username);
             this.props.navigation.navigate('RegisterSuccess')
             console.log(JSON.stringify(response))
         })
