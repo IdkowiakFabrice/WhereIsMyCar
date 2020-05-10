@@ -11,12 +11,12 @@ export default class App extends Component {
   
   state = {
     latitude: 48.85709291743982,
-    longitude: 2.401771566073614,
+    longitude: 2.2946405681579574,
     error:null,
-    carMarkerLat: null,
-    carMarkerLong: null,
+    carMarkerLat: 48.85709291743982,
+    carMarkerLong: 48.85709291743982,
     isVisible: false,
-    positionCarComment: null, 
+    positionCarComment: '', 
     token: '',
     idUser: '',
   };
@@ -41,7 +41,7 @@ export default class App extends Component {
   };
 
   _getMarker = (idUser, token) => {
-    console.log('iduSer:%s', idUser)
+    console.log('---GetMarker')
     let axiosConfig = {
         headers: {
             'Content-Type': 'application/json',
@@ -78,6 +78,13 @@ export default class App extends Component {
      );
 
    }
+
+   _test = (aaa) =>{
+     console.log('OUI')
+     this.setState({carMarkerLat: aaa.nativeEvent.coordinate.latitude})
+     this.setState({carMarkerLong: aaa.nativeEvent.coordinate.longitude})
+     this.setState({isVisible: true})
+   }
   
   render() {
     const emptyPopup = <View></View>
@@ -87,11 +94,11 @@ export default class App extends Component {
       <TextInput
       style={{borderBottomColor:'black', borderBottomWidth:1, textAlign:'center', marginBottom:5, borderRadius:50}}
         placeholder="Ajouter des details ? "
-        onChangeText={positionCarDetails => this.setState({positionCarDetails})}
-        value={this.state.positionCarDetails}>
+        onChangeText={positionCarComment => this.setState({positionCarComment})}
+        value={this.state.positionCarComment}>
       </TextInput>
       <Text onPress={()=> this.setState({isVisible: false})} style={styles.buttonValider}>Valider</Text>
-      <Text onPress={()=> this.setState({isVisible: false, positionCarDetails:'Votre voiture'})} style={styles.buttonClose}>Annuler</Text>
+      <Text onPress={()=> this.setState({isVisible: false, positionCarComment:'Votre voiture'})} style={styles.buttonClose}>Annuler</Text>
     </View>
 
     return (
@@ -103,7 +110,7 @@ export default class App extends Component {
           latitudeDelta: 0.1,
           longitudeDelta: 0.1,
         }}
-        onPress={(e)=> this.setState({carMarker: e.nativeEvent.coordinate, isVisible: true })}>
+        onPress={(e)=> this._test(e)}>
           <Marker
           coordinate={{
             latitude: this.state.latitude,
@@ -112,7 +119,7 @@ export default class App extends Component {
           title={'Votre position'}
         />
         {
-          this.state.carMarker && 
+          this.state.carMarkerLat && 
           <MapsView.Marker 
           coordinate={{
             latitude: this.state.carMarkerLat,

@@ -13,9 +13,9 @@ class Login extends Component{
         };
       }
 
-      _storeData = (token, idUser) => {
+      _storeData = (token, idUser, latitude, longitude, commentaire) => {
         try {
-          AsyncStorage.multiSet([['@token', token], ['@idUser', idUser]])
+          AsyncStorage.multiSet([['@token', token], ['@idUser', idUser], ['@latitude', latitude], ['@longitude', longitude], ['@commentaire', commentaire]])
         } catch (error) {
          console.error(error);
         }
@@ -34,9 +34,10 @@ class Login extends Component{
         };
         axios.post(link, user, axiosConfig)
         .then((response) => {
+            console.log(JSON.stringify(response))
+
             this._storeData(response.data.data.meta.token, response.data.data.user.id.toString());
             this.props.navigation.navigate('Map')
-           // console.log(JSON.stringify(response))
         })
         .catch((error) => {
             console.log(error);
