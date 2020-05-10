@@ -46,6 +46,7 @@ class Login extends Component{
             <TextInput
                 placeholder="Mot de passe"
                 style = {styles.input}
+                secureTextEntry={true}
                 onChangeText={(password) => {this.setState({password})}}
                 value={this.state.password}>
             </TextInput>
