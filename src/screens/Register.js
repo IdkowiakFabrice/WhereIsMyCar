@@ -42,7 +42,6 @@ class Register extends Component{
         .then((response) => {
             this._storeData(response.data.data.meta.token, response.data.data.user.username);
             this.props.navigation.navigate('RegisterSuccess')
-            console.log(JSON.stringify(response))
         })
         .catch((error) => {
             console.log(error);

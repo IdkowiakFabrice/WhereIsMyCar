@@ -19,14 +19,15 @@ export default class App extends Component {
     positionCarComment: '', 
     token: '',
     idUser: '',
+    noData:'',
   };
 
   _retrieveData = async () => {
     try {
         const token = await AsyncStorage.getItem('@token');
         const idUser = await AsyncStorage.getItem('@idUser');
-        //console.log('token:%s', token)
-        //console.log('userid:%s', idUser)
+        console.log('token:%s', token)
+        console.log('userid:%s', idUser)
         if (idUser !== null) {
           this.setState({ idUser })
         }
@@ -58,7 +59,7 @@ export default class App extends Component {
       //console.log('carMarker: %s', this.state.carMarker)
     })
     .catch((error) => {
-        console.log(error);
+      this.setState({noData:true})
     });
   }
 
@@ -79,13 +80,49 @@ export default class App extends Component {
 
    }
 
-   _test = (aaa) =>{
-     console.log('OUI')
-     this.setState({carMarkerLat: aaa.nativeEvent.coordinate.latitude})
-     this.setState({carMarkerLong: aaa.nativeEvent.coordinate.longitude})
+   _setMarker = (e) =>{
+     this.setState({carMarkerLat: e.nativeEvent.coordinate.latitude})
+     this.setState({carMarkerLong: e.nativeEvent.coordinate.longitude})
      this.setState({isVisible: true})
    }
   
+   _sendMarker = () => {
+     this.setState({isVisible: false})
+    const noData = this.state.noData
+     const carMarkerLat = this.state.carMarkerLat
+     const carMarkerLong = this.state.carMarkerLong
+     const positionCarComment = this.state.positionCarComment
+     const idUser = this.state.idUser
+    let position = {
+      "latitude" : carMarkerLat,
+      "longitude" :  carMarkerLong,
+      "commentaire" : positionCarComment
+    }
+    console.log(position)
+    let axiosConfig = {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + this.state.token
+      }
+    };
+    if(noData === true){
+      axios.post("https://whereismycar.herokuapp.com/api/users/" + idUser + '/positions/', position, axiosConfig)
+      .then((response) => {
+        this.setState({noData: false})
+      })
+      .catch((error) => {
+          console.log(error);
+      });
+    }else{
+    axios.put("https://whereismycar.herokuapp.com/api/users/" + idUser + '/positions/'+ idUser, position, axiosConfig)
+    .then((response) => {
+    })
+    .catch((error) => {
+        console.log(error);
+    });
+  }
+   }
+
   render() {
     const emptyPopup = <View></View>
     const popup = 
@@ -97,8 +134,7 @@ export default class App extends Component {
         onChangeText={positionCarComment => this.setState({positionCarComment})}
         value={this.state.positionCarComment}>
       </TextInput>
-      <Text onPress={()=> this.setState({isVisible: false})} style={styles.buttonValider}>Valider</Text>
-      <Text onPress={()=> this.setState({isVisible: false, positionCarComment:'Votre voiture'})} style={styles.buttonClose}>Annuler</Text>
+      <Text onPress={()=> this._sendMarker()} style={styles.buttonValider}>Valider</Text>
     </View>
 
     return (
@@ -110,7 +146,7 @@ export default class App extends Component {
           latitudeDelta: 0.1,
           longitudeDelta: 0.1,
         }}
-        onPress={(e)=> this._test(e)}>
+        onPress={(e)=> this._setMarker(e)}>
           <Marker
           coordinate={{
             latitude: this.state.latitude,

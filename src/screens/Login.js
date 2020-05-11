@@ -13,9 +13,9 @@ class Login extends Component{
         };
       }
 
-      _storeData = (token, idUser, latitude, longitude, commentaire) => {
+      _storeData = (token, idUser) => {
         try {
-          AsyncStorage.multiSet([['@token', token], ['@idUser', idUser], ['@latitude', latitude], ['@longitude', longitude], ['@commentaire', commentaire]])
+          AsyncStorage.multiSet([['@token', token], ['@idUser', idUser]])
         } catch (error) {
          console.error(error);
         }
